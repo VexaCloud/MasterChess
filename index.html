@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MasterChess – Play Chess Online Free</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- SVG sprite -->
+  <div style="display:none">
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <symbol id="icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+      <symbol id="icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></symbol>
+      <symbol id="icon-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></symbol>
+      <symbol id="icon-puzzle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.5 12.5a2.5 2.5 0 0 1 0 5H17v2a2 2 0 0 1-2 2h-2.5a2.5 2.5 0 0 1 0-5H15v-2a2 2 0 0 1 2-2h2.5z"/><path d="M9.5 6.5a2.5 2.5 0 0 0 0-5H12V3a2 2 0 0 1 2-2h2.5a2.5 2.5 0 0 1 0 5H14v2a2 2 0 0 1-2 2H9.5z"/></symbol>
+      <symbol id="icon-learn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+      <symbol id="icon-variants" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></symbol>
+      <symbol id="icon-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+      <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+      <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+      <symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+      <symbol id="icon-logo" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L9 7h6l-3-5zM8 8v3h2v2H8v2h2v2H6v-2H4v-2h2V11H4V8h4zm8 0v3h2v2h-2v2h2v2h-4v-2h-2v-2h2V11h-2V8h4z"/></symbol>
+    </svg>
+  </div>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="logo">
+        <svg class="icon-lg"><use href="#icon-logo"/></svg>
+        MasterChess
+      </div>
+      <nav>
+        <a href="index.html" class="active"><svg class="icon"><use href="#icon-home"/></svg> Home</a>
+        <a href="play.html"><svg class="icon"><use href="#icon-play"/></svg> Play</a>
+        <a href="bots.html"><svg class="icon"><use href="#icon-bot"/></svg> Bots</a>
+        <a href="puzzles.html"><svg class="icon"><use href="#icon-puzzle"/></svg> Puzzles</a>
+        <a href="learn.html"><svg class="icon"><use href="#icon-learn"/></svg> Learn</a>
+        <a href="variants.html"><svg class="icon"><use href="#icon-variants"/></svg> Variants</a>
+        <a href="tournaments.html"><svg class="icon"><use href="#icon-trophy"/></svg> Tournaments</a>
+        <a href="clubs.html"><svg class="icon"><use href="#icon-users"/></svg> Clubs</a>
+        <a href="analysis.html"><svg class="icon"><use href="#icon-search"/></svg> Analysis</a>
+        <a href="profile.html"><svg class="icon"><use href="#icon-user"/></svg> Profile</a>
+        <a href="settings.html"><svg class="icon"><use href="#icon-settings"/></svg> Settings</a>
+      </nav>
+      <div style="margin-top:auto; padding-top:1rem;">
+        <a href="play.html" class="btn btn-primary" style="width:100%; text-align:center;">Play Now</a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="hero">
+        <h1>MasterChess</h1>
+        <p>Play live chess, challenge unique bots with personality, solve unlimited puzzles, join leagues, and improve with powerful Stockfish analysis — completely free, no premium tiers.</p>
+        <div class="flex flex-center gap-2" style="justify-content:center; flex-wrap:wrap;">
+          <a href="play.html" class="btn btn-primary">Play Online</a>
+          <a href="bots.html" class="btn btn-secondary">Play vs Bot</a>
+          <a href="puzzles.html" class="btn btn-secondary">Daily Puzzle</a>
+        </div>
+      </div>
+
+      <div class="alert">
+        Everything is free and unlimited. No memberships, no paywalls. Play bots, puzzles, analysis, tournaments, clubs — all features unlocked for everyone.
+      </div>
+
+      <h2 class="mb-2">Game Modes</h2>
+      <div class="grid grid-3 mb-2">
+        <a href="play.html?mode=live" class="card mode-card">
+          <h3>Live Chess</h3>
+          <p>Rated or unrated games vs players worldwide. Bullet, Blitz, Rapid, Custom time controls.</p>
+          <span class="badge badge-free">Unlimited</span>
+        </a>
+        <a href="bots.html" class="card mode-card">
+          <h3>Bots & Coach</h3>
+          <p>100+ unique personalities with distinct styles, strengths, and comments. Adaptive coaches with hints and feedback.</p>
+          <span class="badge badge-free">All unlocked</span>
+        </a>
+        <a href="play.html?mode=daily" class="card mode-card">
+          <h3>Daily / Correspondence</h3>
+          <p>One move per day. Vacation days and timeout protection available to all.</p>
+          <span class="badge badge-free">Unlimited</span>
+        </a>
+        <a href="variants.html" class="card mode-card">
+          <h3>Variants</h3>
+          <p>Chess960, Crazyhouse, Atomic, 3-Check, 4-Player, Bughouse, Antichess, Horde, Duck Chess and more.</p>
+          <span class="badge badge-free">All free</span>
+        </a>
+        <a href="tournaments.html" class="card mode-card">
+          <h3>Tournaments & Leagues</h3>
+          <p>Swiss, Arena, Daily. Climb from Wood to Legends with prestige.</p>
+          <span class="badge badge-free">Open to all</span>
+        </a>
+        <a href="clubs.html" class="card mode-card">
+          <h3>Clubs & Teams</h3>
+          <p>Join clubs, Vote Chess, team matches, championships, forums.</p>
+          <span class="badge badge-free">Social</span>
+        </a>
+      </div>
+
+      <h2 class="mb-2">Improve Your Game</h2>
+      <div class="grid grid-3">
+        <a href="puzzles.html" class="card mode-card">
+          <h3>Puzzles</h3>
+          <p>Rated puzzles, Puzzle Rush, Puzzle Battle, themed tactics. Unlimited with leagues and streaks.</p>
+          <span class="badge badge-free">Unlimited</span>
+        </a>
+        <a href="learn.html" class="card mode-card">
+          <h3>Lessons & Courses</h3>
+          <p>Interactive lessons, video library, drills, endgames, Vision Trainer.</p>
+          <span class="badge badge-free">Full access</span>
+        </a>
+        <a href="analysis.html" class="card mode-card">
+          <h3>Game Review</h3>
+          <p>Stockfish analysis, accuracy scores, coach explanations, insights and advanced stats.</p>
+          <span class="badge badge-free">Unlimited</span>
+        </a>
+      </div>
+
+      <div class="card mt-2" style="margin-top:2rem;">
+        <h3>All Features Free Forever</h3>
+        <p class="text-muted text-sm mb-2">No Gold, Platinum or Diamond. Every feature listed is available to every user with no limits on bots, puzzles, reviews, simuls, classroom, or cloud analysis.</p>
+        <div class="grid grid-3">
+          <div><strong>100+ Bots</strong><br><span class="text-muted text-sm">All personalities unlocked</span></div>
+          <div><strong>Unlimited Puzzles</strong><br><span class="text-muted text-sm">Rush, Battle, themed</span></div>
+          <div><strong>Full Analysis</strong><br><span class="text-muted text-sm">Stockfish + Coach feedback</span></div>
+        </div>
+      </div>
+
+      <footer class="site-footer">
+        MasterChess — free chess for everyone. Powered by Stockfish.js.
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

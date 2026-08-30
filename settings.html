@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings – MasterChess</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div style="display:none">
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <symbol id="icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+      <symbol id="icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></symbol>
+      <symbol id="icon-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></symbol>
+      <symbol id="icon-puzzle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.5 12.5a2.5 2.5 0 0 1 0 5H17v2a2 2 0 0 1-2 2h-2.5a2.5 2.5 0 0 1 0-5H15v-2a2 2 0 0 1 2-2h2.5z"/></symbol>
+      <symbol id="icon-learn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+      <symbol id="icon-variants" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></symbol>
+      <symbol id="icon-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+      <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></symbol>
+      <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+      <symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+      <symbol id="icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+      <symbol id="icon-logo" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L9 7h6l-3-5zM8 8v3h2v2H8v2h2v2H6v-2H4v-2h2V11H4V8h4zm8 0v3h2v2h-2v2h2v2h-4v-2h-2v-2h2V11h-2V8h4z"/></symbol>
+    </svg>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="logo"><svg class="icon-lg"><use href="#icon-logo"/></svg> MasterChess</div>
+      <nav>
+        <a href="index.html"><svg class="icon"><use href="#icon-home"/></svg> Home</a>
+        <a href="play.html"><svg class="icon"><use href="#icon-play"/></svg> Play</a>
+        <a href="bots.html"><svg class="icon"><use href="#icon-bot"/></svg> Bots</a>
+        <a href="puzzles.html"><svg class="icon"><use href="#icon-puzzle"/></svg> Puzzles</a>
+        <a href="learn.html"><svg class="icon"><use href="#icon-learn"/></svg> Learn</a>
+        <a href="variants.html"><svg class="icon"><use href="#icon-variants"/></svg> Variants</a>
+        <a href="tournaments.html"><svg class="icon"><use href="#icon-trophy"/></svg> Tournaments</a>
+        <a href="clubs.html"><svg class="icon"><use href="#icon-users"/></svg> Clubs</a>
+        <a href="analysis.html"><svg class="icon"><use href="#icon-search"/></svg> Analysis</a>
+        <a href="profile.html"><svg class="icon"><use href="#icon-user"/></svg> Profile</a>
+        <a href="settings.html" class="active"><svg class="icon"><use href="#icon-settings"/></svg> Settings</a>
+      </nav>
+    </aside>
+    <main class="main">
+      <h1 class="mb-2">Settings</h1>
+      <div class="alert">All preferences are free. No membership required for any option.</div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <h3 class="mb-2">Gameplay</h3>
+          <div class="form-group"><label><input type="checkbox" id="premoves" checked> Premoves</label></div>
+          <div class="form-group"><label><input type="checkbox" id="animations" checked> Piece animations</label></div>
+          <div class="form-group"><label><input type="checkbox" id="sounds" checked> Sound effects</label></div>
+          <div class="form-group"><label><input type="checkbox" id="auto-queen" checked> Auto-queen on promotion</label></div>
+          <div class="form-group">
+            <label>Board orientation</label>
+            <select id="orientation"><option>White</option><option>Black</option><option>Auto</option></select>
+          </div>
+          <div class="form-group">
+            <label>Challenge preferences</label>
+            <select id="challenges"><option>Everyone</option><option>Friends only</option><option>None</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="mb-2">Interface</h3>
+          <div class="form-group"><label><input type="checkbox" id="dark-mode" checked> Dark mode</label></div>
+          <div class="form-group"><label><input type="checkbox" id="ratings-display" checked> Show ratings</label></div>
+          <div class="form-group"><label><input type="checkbox" id="mistake-counter" checked> Mistake counters at game end</label></div>
+          <div class="form-group">
+            <label>Theme / pieces</label>
+            <select id="theme"><option>Classic</option><option>Wood</option><option>Modern</option><option>Neon</option></select>
+          </div>
+          <div class="form-group">
+            <label>Language</label>
+            <select id="lang"><option>English</option><option>Spanish</option><option>French</option><option>German</option><option>Russian</option><option>Chinese</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="mb-2">Privacy & Social</h3>
+          <div class="form-group">
+            <label>Friend requests</label>
+            <select><option>Everyone</option><option>Friends of friends</option><option>None</option></select>
+          </div>
+          <div class="form-group">
+            <label>Who can challenge me</label>
+            <select><option>Everyone</option><option>Friends</option><option>None</option></select>
+          </div>
+          <div class="form-group"><label><input type="checkbox" checked> Show friends list publicly</label></div>
+          <div class="form-group"><label><input type="checkbox"> Show insights publicly</label></div>
+        </div>
+
+        <div class="card">
+          <h3 class="mb-2">Notifications</h3>
+          <div class="form-group"><label><input type="checkbox" checked> Game challenges</label></div>
+          <div class="form-group"><label><input type="checkbox" checked> Club announcements</label></div>
+          <div class="form-group"><label><input type="checkbox" checked> Tournament starts</label></div>
+          <div class="form-group"><label><input type="checkbox"> Email digests</label></div>
+          <div class="form-group"><label><input type="checkbox" checked> Push notifications</label></div>
+        </div>
+
+        <div class="card">
+          <h3 class="mb-2">Coach & Bots</h3>
+          <div class="form-group">
+            <label>Preferred digital coach</label>
+            <select id="coach">
+              <option>Gotham Coach</option>
+              <option>Coach Hikaru</option>
+              <option>Coach Levy</option>
+              <option>Adaptive</option>
+            </select>
+          </div>
+          <div class="form-group"><label><input type="checkbox" checked> Bot comments during games</label></div>
+          <div class="form-group"><label><input type="checkbox" checked> Hints available in coach mode</label></div>
+        </div>
+
+        <div class="card">
+          <h3 class="mb-2">Account & Security</h3>
+          <div class="form-group"><label>Change password</label><input type="password" placeholder="New password"></div>
+          <div class="form-group"><label><input type="checkbox"> Enable 2FA</label></div>
+          <div class="form-group"><label>Vacation days (Daily chess)</label><input type="number" value="14" min="0"></div>
+          <p class="text-muted text-sm">Vacation days and timeout protection are free for all users.</p>
+        </div>
+      </div>
+
+      <div class="mt-2">
+        <button class="btn btn-primary" id="save-settings">Save Settings</button>
+        <button class="btn btn-secondary" onclick="localStorage.clear(); alert('Local settings cleared');">Reset to defaults</button>
+      </div>
+    </main>
+  </div>
+  <script>
+    document.getElementById('save-settings').onclick = () => {
+      const prefs = {
+        premoves: document.getElementById('premoves').checked,
+        animations: document.getElementById('animations').checked,
+        sounds: document.getElementById('sounds').checked,
+        autoQueen: document.getElementById('auto-queen').checked,
+        orientation: document.getElementById('orientation').value,
+        darkMode: document.getElementById('dark-mode').checked,
+        coach: document.getElementById('coach').value,
+        theme: document.getElementById('theme').value
+      };
+      localStorage.setItem('masterchess_settings', JSON.stringify(prefs));
+      alert('Settings saved (local). Connect Supabase to persist across devices.');
+    };
+    // load
+    try {
+      const s = JSON.parse(localStorage.getItem('masterchess_settings') || '{}');
+      if (s.premoves !== undefined) document.getElementById('premoves').checked = s.premoves;
+      if (s.theme) document.getElementById('theme').value = s.theme;
+      if (s.coach) document.getElementById('coach').value = s.coach;
+    } catch(e){}
+  </script>
+</body>
+</html>

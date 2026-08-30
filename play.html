@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Play – MasterChess</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    .play-layout { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; align-items: start; }
+    @media (max-width: 900px) { .play-layout { grid-template-columns: 1fr; } }
+    .simple-board div { user-select: none; }
+    .square-highlight { outline: 3px solid #4ade80 !important; }
+  </style>
+</head>
+<body>
+  <div style="display:none">
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <symbol id="icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+      <symbol id="icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></symbol>
+      <symbol id="icon-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></symbol>
+      <symbol id="icon-puzzle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.5 12.5a2.5 2.5 0 0 1 0 5H17v2a2 2 0 0 1-2 2h-2.5a2.5 2.5 0 0 1 0-5H15v-2a2 2 0 0 1 2-2h2.5z"/></symbol>
+      <symbol id="icon-learn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+      <symbol id="icon-variants" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></symbol>
+      <symbol id="icon-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+      <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></symbol>
+      <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+      <symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+      <symbol id="icon-logo" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L9 7h6l-3-5zM8 8v3h2v2H8v2h2v2H6v-2H4v-2h2V11H4V8h4zm8 0v3h2v2h-2v2h2v2h-4v-2h-2v-2h2V11h-2V8h4z"/></symbol>
+    </svg>
+  </div>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="logo"><svg class="icon-lg"><use href="#icon-logo"/></svg> MasterChess</div>
+      <nav>
+        <a href="index.html"><svg class="icon"><use href="#icon-home"/></svg> Home</a>
+        <a href="play.html" class="active"><svg class="icon"><use href="#icon-play"/></svg> Play</a>
+        <a href="bots.html"><svg class="icon"><use href="#icon-bot"/></svg> Bots</a>
+        <a href="puzzles.html"><svg class="icon"><use href="#icon-puzzle"/></svg> Puzzles</a>
+        <a href="learn.html"><svg class="icon"><use href="#icon-learn"/></svg> Learn</a>
+        <a href="variants.html"><svg class="icon"><use href="#icon-variants"/></svg> Variants</a>
+        <a href="tournaments.html"><svg class="icon"><use href="#icon-trophy"/></svg> Tournaments</a>
+        <a href="clubs.html"><svg class="icon"><use href="#icon-users"/></svg> Clubs</a>
+        <a href="analysis.html"><svg class="icon"><use href="#icon-search"/></svg> Analysis</a>
+        <a href="profile.html"><svg class="icon"><use href="#icon-user"/></svg> Profile</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="play-layout">
+        <div>
+          <div class="board-wrap mb-2">
+            <div id="board"></div>
+          </div>
+          <div class="flex gap-2 flex-center" style="justify-content:center; flex-wrap:wrap;">
+            <button class="btn btn-secondary" id="btn-new">New Game</button>
+            <button class="btn btn-secondary" id="btn-undo">Takeback</button>
+            <button class="btn btn-secondary" id="btn-hint">Hint</button>
+            <button class="btn btn-ghost" id="btn-flip">Flip Board</button>
+          </div>
+        </div>
+
+        <div class="game-panel">
+          <div id="opponent-info" class="mb-2">
+            <strong>Select a mode</strong>
+            <p class="text-muted text-sm">Choose bot or start live game</p>
+          </div>
+
+          <div class="form-group">
+            <label>Mode</label>
+            <select id="mode-select">
+              <option value="bot">vs Bot</option>
+              <option value="coach">vs Coach (hints + feedback)</option>
+              <option value="live">Live Online (matchmaking)</option>
+              <option value="daily">Daily / Correspondence</option>
+              <option value="odds">Odds / Handicap</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="bot-select-wrap">
+            <label>Bot / Coach</label>
+            <select id="bot-select"></select>
+          </div>
+
+          <div class="form-group">
+            <label>Time Control</label>
+            <select id="tc-select">
+              <optgroup label="Bullet">
+                <option value="60|0">1+0</option>
+                <option value="120|1">2+1</option>
+                <option value="30|0">30 sec</option>
+              </optgroup>
+              <optgroup label="Blitz">
+                <option value="180|0">3+0</option>
+                <option value="180|2">3+2</option>
+                <option value="300|0" selected>5+0</option>
+                <option value="300|5">5+5</option>
+              </optgroup>
+              <optgroup label="Rapid">
+                <option value="600|0">10+0</option>
+                <option value="900|10">15+10</option>
+                <option value="1800|0">30+0</option>
+              </optgroup>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Your color</label>
+            <select id="color-select">
+              <option value="white">White</option>
+              <option value="black">Black</option>
+              <option value="random">Random</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary" style="width:100%; margin-bottom:1rem;" id="btn-start">Start Game</button>
+
+          <div class="clock mb-1" id="clock-white">White: --:--</div>
+          <div class="clock mb-2" id="clock-black">Black: --:--</div>
+
+          <div class="move-list" id="move-list"></div>
+
+          <div class="chat-box" id="chat-box">
+            <div class="chat-msg system">Bot comments and coach feedback appear here.</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/bots.js"></script>
+  <script src="js/chess-core.js"></script>
+  <script src="js/stockfish-engine.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    let currentBot = null;
+    let engine = null;
+    let controller = null;
+    let playerColor = 'w';
+    let selectedFrom = null;
+    let gameActive = false;
+
+    const botSelect = document.getElementById('bot-select');
+    MasterChessBots.BOTS.forEach(b => {
+      const opt = document.createElement('option');
+      opt.value = b.id;
+      opt.textContent = `${b.name} (${b.elo})`;
+      botSelect.appendChild(opt);
+    });
+    if (params.get('bot')) botSelect.value = params.get('bot');
+
+    function addChat(text, cls = 'bot') {
+      const el = document.createElement('div');
+      el.className = 'chat-msg ' + cls;
+      el.textContent = text;
+      document.getElementById('chat-box').appendChild(el);
+      document.getElementById('chat-box').scrollTop = 9999;
+    }
+
+    function updateMoves() {
+      const hist = controller ? controller.game.history() : [];
+      let html = '';
+      for (let i = 0; i < hist.length; i += 2) {
+        html += `${Math.floor(i/2)+1}. ${hist[i]} ${hist[i+1] || ''}<br>`;
+      }
+      document.getElementById('move-list').innerHTML = html;
+    }
+
+    function squareToCoords(sq) {
+      // for simple board click: data attributes
+    }
+
+    async function startGame() {
+      const mode = document.getElementById('mode-select').value;
+      const botId = botSelect.value;
+      currentBot = MasterChessBots.getBotById(botId);
+      const colorSel = document.getElementById('color-select').value;
+      playerColor = colorSel === 'random' ? (Math.random() < 0.5 ? 'w' : 'b') : (colorSel === 'white' ? 'w' : 'b');
+
+      document.getElementById('opponent-info').innerHTML = `
+        <strong>${currentBot.name}</strong>
+        <p class="text-muted text-sm">${currentBot.elo} Elo · ${currentBot.style}</p>
+      `;
+
+      if (!controller) {
+        controller = new GameController({
+          boardEl: document.getElementById('board'),
+          onUpdate: () => { updateMoves(); controller.render(); },
+          onGameOver: (result) => {
+            gameActive = false;
+            const event = result === '1-0' ? (playerColor === 'w' ? 'win' : 'loss') : result === '0-1' ? (playerColor === 'b' ? 'win' : 'loss') : 'draw';
+            const c = MasterChessBots.getBotComment(currentBot, event === 'draw' ? 'good' : event);
+            if (c) addChat(currentBot.name + ': ' + c);
+            addChat('Game over: ' + result, 'system');
+          }
+        });
+        await controller.init();
+      } else {
+        controller.reset();
+      }
+
+      if (!engine) {
+        engine = new StockfishEngine({ skillLevel: currentBot.skill, depth: currentBot.depth });
+        try {
+          await engine.init();
+          engine.setSkillLevel(currentBot.skill);
+        } catch (e) {
+          addChat('Stockfish not loaded. Place stockfish.js in js/stockfish/ (from github.com/nmrugg/stockfish.js). Using random legal moves as fallback.', 'system');
+        }
+      } else {
+        engine.setSkillLevel(currentBot.skill);
+        engine.setDepth(currentBot.depth);
+        engine.newGame();
+      }
+
+      gameActive = true;
+      const startComment = MasterChessBots.getBotComment(currentBot, 'start');
+      if (startComment) addChat(currentBot.name + ': ' + startComment);
+
+      // If player is black, engine moves first
+      if (playerColor === 'b') {
+        setTimeout(() => makeEngineMove(), 400);
+      }
+
+      // Simple click-to-move on rendered board
+      setupClickMoves();
+    }
+
+    function setupClickMoves() {
+      const board = document.getElementById('board');
+      board.onclick = (e) => {
+        if (!gameActive || !controller) return;
+        if (controller.turn() !== playerColor) return;
+        // For simple board we need square mapping — use prompt for demo moves
+        // Better: use algebraic input or full board library
+      };
+    }
+
+    // Move input via prompt for reliability without full board lib
+    document.getElementById('board').addEventListener('click', () => {
+      if (!gameActive || !controller || controller.turn() !== playerColor) return;
+      const from = prompt('From square (e.g. e2):');
+      if (!from) return;
+      const to = prompt('To square (e.g. e4):');
+      if (!to) return;
+      const move = controller.move(from.toLowerCase(), to.toLowerCase());
+      if (move) {
+        if (move.captured) {
+          const c = MasterChessBots.getBotComment(currentBot, 'capture');
+          // player captured
+        }
+        if (controller.game.in_check()) {
+          const c = MasterChessBots.getBotComment(currentBot, 'check');
+          if (c) addChat(currentBot.name + ': ' + c);
+        }
+        updateMoves();
+        if (!controller.game.game_over()) {
+          setTimeout(() => makeEngineMove(), 500);
+        }
+      } else {
+        alert('Illegal move');
+      }
+    });
+
+    async function makeEngineMove() {
+      if (!gameActive || !controller || controller.turn() === playerColor) return;
+      let best = null;
+      if (engine && engine.ready) {
+        try {
+          const res = await engine.getBestMove(controller.fen(), currentBot.skill, currentBot.depth);
+          best = res.move;
+        } catch (e) {}
+      }
+      if (!best) {
+        // fallback random legal
+        const moves = controller.moves({ verbose: true });
+        if (moves.length) best = moves[Math.floor(Math.random() * moves.length)];
+        else return;
+      }
+      let from, to, promotion;
+      if (typeof best === 'string') {
+        from = best.slice(0, 2);
+        to = best.slice(2, 4);
+        promotion = best.slice(4) || 'q';
+      } else {
+        from = best.from; to = best.to; promotion = best.promotion || 'q';
+      }
+      const move = controller.move(from, to, promotion);
+      if (move) {
+        if (move.captured) {
+          const c = MasterChessBots.getBotComment(currentBot, 'capture');
+          if (c) addChat(currentBot.name + ': ' + c);
+        }
+        if (controller.game.in_check()) {
+          const c = MasterChessBots.getBotComment(currentBot, 'check');
+          if (c) addChat(currentBot.name + ': ' + c);
+        }
+        updateMoves();
+      }
+    }
+
+    document.getElementById('btn-start').onclick = startGame;
+    document.getElementById('btn-new').onclick = () => { if (controller) { controller.reset(); gameActive = false; document.getElementById('chat-box').innerHTML = ''; } };
+    document.getElementById('btn-undo').onclick = () => {
+      if (controller) {
+        controller.undo();
+        if (controller.turn() !== playerColor) controller.undo(); // undo engine too
+        updateMoves();
+        addChat('Takeback granted.', 'system');
+      }
+    };
+    document.getElementById('btn-hint').onclick = async () => {
+      if (!engine || !controller) return;
+      addChat('Thinking of a hint...', 'system');
+      try {
+        const res = await engine.getBestMove(controller.fen(), 12, 10);
+        if (res.move) addChat('Hint: consider ' + res.move, 'system');
+        const hint = currentBot.comments && currentBot.comments.hint;
+        if (hint) addChat(currentBot.name + ': ' + hint[Math.floor(Math.random()*hint.length)], 'bot');
+      } catch (e) {
+        addChat('Hint unavailable without Stockfish.', 'system');
+      }
+    };
+
+    // Auto-start if bot param
+    if (params.get('bot')) {
+      setTimeout(startGame, 300);
+    }
+  </script>
+</body>
+</html>
