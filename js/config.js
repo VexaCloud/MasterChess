@@ -1,7 +1,7 @@
 // MasterChess config — set your Supabase credentials
 window.MasterChessConfig = {
-  supabaseUrl: 'YOUR_SUPABASE_URL',
-  supabaseAnonKey: 'YOUR_SUPABASE_ANON_KEY',
+  supabaseUrl: 'https://ikbblffrtgemyktrkgae.supabase.co',
+  supabaseAnonKey: 'sb_publishable_mOT9PUzKPUYHGY2oKdAS9g_-ZS1yiCh',
   // Stockfish path (download from https://github.com/nmrugg/stockfish.js)
   stockfishPath: 'js/stockfish/stockfish.js',
   // Default time controls
