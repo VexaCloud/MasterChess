@@ -1,52 +1,391 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Puzzles – MasterChess</title>
-  <link rel="stylesheet" href="css/main.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puzzles — MasterChess</title>
+<link rel="icon" href="public/favicon.svg">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/board.css">
 </head>
 <body>
-  <div style="display:none">
-    <svg xmlns="http://www.w3.org/2000/svg">
-      <symbol id="icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
-      <symbol id="icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></symbol>
-      <symbol id="icon-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></symbol>
-      <symbol id="icon-puzzle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.5 12.5a2.5 2.5 0 0 1 0 5H17v2a2 2 0 0 1-2 2h-2.5a2.5 2.5 0 0 1 0-5H15v-2a2 2 0 0 1 2-2h2.5z"/></symbol>
-      <symbol id="icon-learn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
-      <symbol id="icon-variants" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></symbol>
-      <symbol id="icon-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
-      <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></symbol>
-      <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
-      <symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
-      <symbol id="icon-logo" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L9 7h6l-3-5zM8 8v3h2v2H8v2h2v2H6v-2H4v-2h2V11H4V8h4zm8 0v3h2v2h-2v2h2v2h-4v-2h-2v-2h2V11h-2V8h4z"/></symbol>
-    </svg>
-  </div>
-  <div class="app-shell">
-    <aside class="sidebar">
-      <div class="logo"><svg class="icon-lg"><use href="#icon-logo"/></svg> MasterChess</div>
-      <nav>
-        <a href="index.html"><svg class="icon"><use href="#icon-home"/></svg> Home</a>
-        <a href="play.html"><svg class="icon"><use href="#icon-play"/></svg> Play</a>
-        <a href="bots.html"><svg class="icon"><use href="#icon-bot"/></svg> Bots</a>
-        <a href="puzzles.html" class="active"><svg class="icon"><use href="#icon-puzzle"/></svg> Puzzles</a>
-        <a href="learn.html"><svg class="icon"><use href="#icon-learn"/></svg> Learn</a>
-        <a href="variants.html"><svg class="icon"><use href="#icon-variants"/></svg> Variants</a>
-        <a href="tournaments.html"><svg class="icon"><use href="#icon-trophy"/></svg> Tournaments</a>
-        <a href="clubs.html"><svg class="icon"><use href="#icon-users"/></svg> Clubs</a>
-        <a href="analysis.html"><svg class="icon"><use href="#icon-search"/></svg> Analysis</a>
-        <a href="profile.html"><svg class="icon"><use href="#icon-user"/></svg> Profile</a>
-      </nav>
-    </aside>
-    <main class="main">
-      <h1 class="mb-2">Puzzles</h1>
-      <div class="alert">All features are free and unlimited. No premium required.</div>
-      <div class="card">
-        <p>Rated puzzles, Daily Puzzle, Puzzle Rush, Puzzle Battle, themed tactics, leagues and streaks. Unlimited for everyone.</p>
-        <p class="text-muted text-sm mt-2">Scaffolded and ready for full Supabase-backed implementation. Core bot play and Stockfish analysis are live on Play and Analysis pages.</p>
+<div class="app-shell">
+  <div class="topbar" id="topbar"></div>
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="sidebar-scrim" id="scrim"></div>
+
+  <main class="main" id="main-content">
+    <div class="topline">
+      <h1>Puzzles</h1>
+      <div class="chip-row">
+        <div class="chip selected" data-tab="regular">Regular</div>
+        <div class="chip" data-tab="browse">Browse</div>
+        <div class="chip" data-tab="post">Post a puzzle</div>
       </div>
-    </main>
-  </div>
+    </div>
+
+    <!-- ============ REGULAR ============ -->
+    <div id="tab-regular">
+      <div class="puzzle-scene">
+        <div class="board-column">
+          <div class="board-frame">
+            <div class="board-square-wrap"><div id="p-board"></div></div>
+          </div>
+          <div class="board-controls">
+            <button class="btn btn-secondary btn-sm" id="p-hint-btn">Hint</button>
+            <button class="btn btn-secondary btn-sm" id="p-skip-btn">Skip</button>
+            <button class="btn btn-primary btn-sm" id="p-next-btn" style="display:none;">Next puzzle</button>
+          </div>
+        </div>
+        <div class="game-panel">
+          <div class="card" id="p-status">
+            <div class="flex flex-center gap-2" style="justify-content:space-between;">
+              <div>
+                <div class="text-faint text-xs" style="text-transform:uppercase;letter-spacing:.05em;">Your puzzle rating</div>
+                <h2 style="margin:0;" id="p-rating">—</h2>
+              </div>
+              <div class="badge badge-brass" id="p-turn-badge">—</div>
+            </div>
+          </div>
+          <div class="card" id="p-message">
+            <p class="text-muted" style="margin:0;">Loading a puzzle…</p>
+          </div>
+          <div class="card" id="p-source-card" style="display:none;">
+            <span class="badge" id="p-source-badge"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ BROWSE ============ -->
+    <div id="tab-browse" style="display:none;">
+      <div class="chip-row mb-2" id="theme-chips">
+        <div class="chip selected" data-theme="">All</div>
+        <div class="chip" data-theme="mate">Mates</div>
+        <div class="chip" data-theme="tactic">Tactics</div>
+        <div class="chip" data-theme="advantage">Advantage</div>
+      </div>
+      <div class="feed" id="browse-feed">
+        <div class="card skel" style="height:70px;"></div>
+        <div class="card skel" style="height:70px;"></div>
+      </div>
+    </div>
+
+    <!-- ============ POST ============ -->
+    <div id="tab-post" style="display:none;">
+      <div class="card" style="max-width:640px;">
+        <h2>Post a puzzle</h2>
+        <p class="text-muted">Paste the starting FEN, then play out the solution on the board below. We verify every move is legal before it joins the puzzle bank.</p>
+        <div class="form-group">
+          <label>Title (optional)</label>
+          <input type="text" id="post-title" placeholder="e.g. Smothered mate in the Sicilian">
+        </div>
+        <div class="form-group">
+          <label>Starting FEN</label>
+          <input type="text" id="post-fen" placeholder="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1">
+        </div>
+        <button class="btn btn-secondary btn-sm mb-2" id="post-load-btn">Load position</button>
+
+        <div id="post-board-area" style="display:none;">
+          <div class="board-frame" style="max-width:420px;">
+            <div class="board-square-wrap"><div id="post-board"></div></div>
+          </div>
+          <p class="text-sm text-muted mt-1">Solution so far: <span class="mono" id="post-solution-text">(none)</span></p>
+          <div class="flex gap-1 mb-2">
+            <button class="btn btn-secondary btn-sm" id="post-undo-btn">Undo last move</button>
+          </div>
+          <div class="form-group">
+            <label>Estimated difficulty</label>
+            <input type="number" id="post-rating" value="1200" min="400" max="3000" style="max-width:140px;">
+          </div>
+          <button class="btn btn-primary" id="post-submit-btn">Submit puzzle</button>
+        </div>
+        <div id="post-alert"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+import { supabase, requireSession, getProfile } from './js/supabase-client.js';
+import { mountShell } from './js/nav.js';
+import { callFunction } from './js/api.js';
+import { GameController } from './js/chess-core.js';
+import { BoardUI } from './js/board-ui.js';
+import { StockfishEngine } from './js/stockfish-engine.js';
+import { generatePuzzle } from './js/puzzle-generator.js';
+
+const session = await requireSession();
+const user = session.user;
+const myProfile = await getProfile(user.id).catch(() => null);
+mountShell({ active: 'puzzles.html', profile: myProfile });
+
+document.getElementById('p-rating').textContent = myProfile?.ratings?.puzzle ?? 1000;
+
+// ---------- tabs ----------
+document.querySelectorAll('[data-tab]').forEach((chip) => {
+  chip.onclick = () => {
+    document.querySelectorAll('[data-tab]').forEach((c) => c.classList.toggle('selected', c === chip));
+    ['regular', 'browse', 'post'].forEach((t) => {
+      document.getElementById('tab-' + t).style.display = t === chip.dataset.tab ? 'block' : 'none';
+    });
+    if (chip.dataset.tab === 'browse' && !browseLoaded) loadBrowse();
+  };
+});
+
+// ============================================================
+// REGULAR (Stockfish-generated when the bank is exhausted)
+// ============================================================
+let pController = null, pBoard = null, pEngine = null, pSolution = [], pStep = 0, pFen = '', pPuzzleId = null, pMistake = false;
+
+async function ensureEngine() {
+  if (pEngine) return pEngine;
+  pEngine = new StockfishEngine();
+  await pEngine.init();
+  return pEngine;
+}
+
+async function loadRegularPuzzle() {
+  const msg = document.getElementById('p-message');
+  const sourceCard = document.getElementById('p-source-card');
+  sourceCard.style.display = 'none';
+  msg.innerHTML = '<p class="text-muted" style="margin:0;">Loading a puzzle…</p>';
+  document.getElementById('p-next-btn').style.display = 'none';
+
+  const res = await callFunction('get-puzzle', { mode: 'regular' });
+  if (res.puzzle) {
+    setupPuzzle(res.puzzle);
+    sourceCard.style.display = 'block';
+    document.getElementById('p-source-badge').textContent =
+      res.puzzle.source === 'user' ? 'Community puzzle' : res.puzzle.source === 'engine' ? 'Stockfish generated' : 'Curated';
+    return;
+  }
+
+  // Bank has nothing unseen near this rating — generate one locally with Stockfish.
+  msg.innerHTML = '<p class="text-muted" style="margin:0;" id="gen-progress">Stockfish is building you a puzzle…</p>';
+  await ensureEngine();
+  const generated = await generatePuzzle(pEngine, {
+    targetRating: res.target_rating || 1000,
+    onProgress: (m) => { const el = document.getElementById('gen-progress'); if (el) el.textContent = m; },
+  });
+  if (!generated) {
+    msg.innerHTML = '<p class="text-muted" style="margin:0;">Couldn\'t find a fresh tactic just now — try again in a moment.</p>';
+    return;
+  }
+  let saved;
+  try {
+    saved = await callFunction('save-generated-puzzle', {
+      fen: generated.fen, moves: generated.moves, rating: generated.rating,
+      themes: generated.themes, eval_swing: generated.evalSwing,
+    });
+  } catch {
+    saved = { puzzle: { ...generated, id: null } };
+  }
+  setupPuzzle(saved.puzzle);
+  sourceCard.style.display = 'block';
+  document.getElementById('p-source-badge').textContent = 'Stockfish generated — new';
+}
+
+function setupPuzzle(puzzle) {
+  pFen = puzzle.fen;
+  pSolution = puzzle.moves;
+  pStep = 0;
+  pPuzzleId = puzzle.id || null;
+  pMistake = false;
+  pController = new GameController(pFen);
+  const puzzleColor = pController.turn; // side to move must find the solution
+
+  const boardEl = document.getElementById('p-board');
+  boardEl.innerHTML = '';
+  pBoard = new BoardUI({
+    container: boardEl,
+    controller: pController,
+    orientation: puzzleColor,
+    interactive: true,
+    perspectiveColor: puzzleColor,
+    onMove: (from, to, promotion) => handlePuzzleMove(from, to, promotion, puzzle),
+  });
+
+  document.getElementById('p-turn-badge').textContent = `${puzzleColor === 'w' ? 'White' : 'Black'} to move`;
+  document.getElementById('p-message').innerHTML =
+    `<p style="margin:0;">Find the best move${pSolution.length > 1 ? ' — it\'s a forced sequence.' : '.'}</p>`;
+  document.getElementById('p-next-btn').style.display = 'none';
+}
+
+async function handlePuzzleMove(from, to, promotion, puzzle) {
+  const expected = pSolution[pStep];
+  const expectedFrom = expected.slice(0, 2), expectedTo = expected.slice(2, 4);
+  if (from !== expectedFrom || to !== expectedTo) {
+    pMistake = true;
+    document.getElementById('p-message').innerHTML = '<p class="text-danger" style="margin:0;color:var(--danger);">Not quite — try again.</p>';
+    return false; // reject the move, board stays as-is
+  }
+
+  const m = pController.move({ from, to, promotion });
+  if (!m) return false;
+  pBoard.setLastMove(from, to);
+  pBoard.render();
+  pStep++;
+
+  if (pStep >= pSolution.length) {
+    document.getElementById('p-message').innerHTML =
+      `<div class="alert alert-success">${pMistake ? 'Got there — puzzle solved.' : 'Solved! Nicely found.'}</div>`;
+    document.getElementById('p-next-btn').style.display = 'inline-flex';
+    recordSolve(!pMistake);
+    return true;
+  }
+
+  // Play the opponent's forced reply automatically.
+  setTimeout(() => {
+    const reply = pSolution[pStep];
+    const rf = reply.slice(0, 2), rt = reply.slice(2, 4), rp = reply.slice(4) || undefined;
+    pController.move({ from: rf, to: rt, promotion: rp });
+    pBoard.setLastMove(rf, rt);
+    pBoard.render();
+    pStep++;
+    if (pStep >= pSolution.length) {
+      document.getElementById('p-message').innerHTML =
+        `<div class="alert alert-success">${pMistake ? 'Got there — puzzle solved.' : 'Solved! Nicely found.'}</div>`;
+      document.getElementById('p-next-btn').style.display = 'inline-flex';
+      recordSolve(!pMistake);
+    } else {
+      document.getElementById('p-message').innerHTML = '<p style="margin:0;">Keep going — find the next move.</p>';
+    }
+  }, 350);
+  return true;
+}
+
+async function recordSolve(cleanSolve) {
+  if (!pPuzzleId) return; // freshly generated puzzle that failed to persist — nothing to record against
+  await supabase.from('puzzle_solves').upsert({
+    user_id: user.id, puzzle_id: pPuzzleId, solved: cleanSolve, solved_at: new Date().toISOString(),
+  });
+}
+
+document.getElementById('p-next-btn').onclick = loadRegularPuzzle;
+document.getElementById('p-skip-btn').onclick = loadRegularPuzzle;
+document.getElementById('p-hint-btn').onclick = () => {
+  if (!pSolution.length || pStep >= pSolution.length) return;
+  const sq = pSolution[pStep].slice(0, 2);
+  document.getElementById('p-message').innerHTML = `<p style="margin:0;">Hint: look at the piece on <strong>${sq}</strong>.</p>`;
+};
+
+loadRegularPuzzle();
+
+// ============================================================
+// BROWSE
+// ============================================================
+let browseLoaded = false;
+let currentTheme = '';
+document.querySelectorAll('#theme-chips .chip').forEach((chip) => {
+  chip.onclick = () => {
+    currentTheme = chip.dataset.theme;
+    document.querySelectorAll('#theme-chips .chip').forEach((c) => c.classList.toggle('selected', c === chip));
+    loadBrowse();
+  };
+});
+
+async function loadBrowse() {
+  browseLoaded = true;
+  const feed = document.getElementById('browse-feed');
+  feed.innerHTML = '<div class="card skel" style="height:70px;"></div><div class="card skel" style="height:70px;"></div>';
+  const res = await callFunction('get-puzzle', { mode: 'browse', theme: currentTheme || undefined });
+  const puzzles = res.puzzles || [];
+  if (!puzzles.length) {
+    feed.innerHTML = '<div class="card empty-state">No puzzles in this category yet.</div>';
+    return;
+  }
+  feed.innerHTML = puzzles.map((p) => `
+    <button class="choice-card" data-id="${p.id}">
+      <div class="icon-wrap"><svg class="icon"><use href="assets/icons.svg#icon-puzzle"/></svg></div>
+      <div class="body">
+        <div class="title">${escapeHtml(p.title || 'Untitled puzzle')}</div>
+        <div class="sub">${(p.themes || []).join(', ') || 'tactic'} · rating ${p.rating} · ${p.source}</div>
+      </div>
+      <div class="trail">Solve →</div>
+    </button>
+  `).join('');
+  feed.querySelectorAll('.choice-card').forEach((card, i) => {
+    card.onclick = () => openBrowsePuzzle(puzzles[i]);
+  });
+}
+
+function openBrowsePuzzle(puzzle) {
+  document.querySelector('[data-tab="regular"]').click();
+  setupPuzzle(puzzle);
+  document.getElementById('p-source-card').style.display = 'block';
+  document.getElementById('p-source-badge').textContent =
+    puzzle.source === 'user' ? 'Community puzzle' : puzzle.source === 'engine' ? 'Stockfish generated' : 'Curated';
+}
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+// ============================================================
+// POST A PUZZLE
+// ============================================================
+let postController = null, postBoard = null, postSolution = [];
+
+document.getElementById('post-load-btn').onclick = () => {
+  const fen = document.getElementById('post-fen').value.trim() ||
+    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+  let controller;
+  try { controller = new GameController(fen); } catch { alert('That FEN is not valid.'); return; }
+  postController = controller;
+  postSolution = [];
+  document.getElementById('post-board-area').style.display = 'block';
+  document.getElementById('post-solution-text').textContent = '(none)';
+
+  const boardEl = document.getElementById('post-board');
+  boardEl.innerHTML = '';
+  postBoard = new BoardUI({
+    container: boardEl,
+    controller: postController,
+    orientation: postController.turn,
+    interactive: true,
+    onMove: (from, to, promotion) => {
+      const m = postController.move({ from, to, promotion });
+      if (!m) return false;
+      postSolution.push(m.from + m.to + (m.promotion || ''));
+      postBoard.setLastMove(from, to);
+      postBoard.render();
+      document.getElementById('post-solution-text').textContent = postSolution.join(' ');
+      return true;
+    },
+  });
+};
+
+document.getElementById('post-undo-btn').onclick = () => {
+  postSolution.pop();
+  const fen = document.getElementById('post-fen').value.trim() || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+  postController = new GameController(fen);
+  postSolution.forEach((uci) => {
+    const from = uci.slice(0, 2), to = uci.slice(2, 4), promotion = uci.slice(4) || undefined;
+    postController.move({ from, to, promotion });
+  });
+  postBoard.controller = postController;
+  postBoard.render();
+  document.getElementById('post-solution-text').textContent = postSolution.join(' ') || '(none)';
+};
+
+document.getElementById('post-submit-btn').onclick = async () => {
+  const alertBox = document.getElementById('post-alert');
+  if (!postSolution.length) { alertBox.innerHTML = '<div class="alert alert-danger mt-2">Play at least one solution move on the board first.</div>'; return; }
+  const fen = document.getElementById('post-fen').value.trim() || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+  const title = document.getElementById('post-title').value.trim();
+  const rating = parseInt(document.getElementById('post-rating').value, 10) || 1200;
+  try {
+    await callFunction('submit-puzzle', { fen, moves: postSolution, title, rating });
+    alertBox.innerHTML = '<div class="alert alert-success mt-2">Puzzle posted — it\'s live in Browse now.</div>';
+    document.getElementById('post-fen').value = '';
+    document.getElementById('post-title').value = '';
+    document.getElementById('post-board-area').style.display = 'none';
+    postSolution = [];
+  } catch (err) {
+    alertBox.innerHTML = `<div class="alert alert-danger mt-2">${err.message}</div>`;
+  }
+};
+</script>
 </body>
 </html>

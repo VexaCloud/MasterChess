@@ -1,155 +1,73 @@
-/**
- * Chess core using chess.js (CDN or local)
- * Board UI can use chessboard.js or custom.
- */
+// Thin wrapper around chess.js (vendored locally at js/vendor/chess.esm.js)
+// giving the board UI exactly what it needs for click-to-move: legal
+// destinations per square, move application, and game-state queries.
+import { Chess } from './vendor/chess.esm.js';
 
-// Load chess.js from CDN if not present
-function loadChessJS() {
-  return new Promise((resolve) => {
-    if (window.Chess) return resolve(window.Chess);
-    const s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js';
-    s.onload = () => resolve(window.Chess);
-    s.onerror = () => {
-      // fallback modern
-      const s2 = document.createElement('script');
-      s2.src = 'https://cdn.jsdelivr.net/npm/chess.js@1.0.0-beta.6/dist/chess.min.js';
-      s2.onload = () => resolve(window.Chess || window.chess);
-      document.head.appendChild(s2);
-    };
-    document.head.appendChild(s);
-  });
-}
-
-class GameController {
-  constructor(opts = {}) {
-    this.game = null;
-    this.boardEl = opts.boardEl || null;
-    this.onUpdate = opts.onUpdate || (() => {});
-    this.onGameOver = opts.onGameOver || (() => {});
-    this.orientation = opts.orientation || 'white';
-    this.history = [];
+export class GameController {
+  constructor(fen) {
+    this.chess = new Chess(fen);
   }
 
-  async init() {
-    await loadChessJS();
-    const Chess = window.Chess || window.chess;
-    this.game = new Chess();
-    this.render();
-    return this;
+  get fen() { return this.chess.fen(); }
+  get pgn() { return this.chess.pgn(); }
+  get turn() { return this.chess.turn(); } // 'w' | 'b'
+  get isGameOver() { return this.chess.isGameOver(); }
+  get isCheck() { return this.chess.isCheck(); }
+  get isCheckmate() { return this.chess.isCheckmate(); }
+  get isStalemate() { return this.chess.isStalemate(); }
+  get isDraw() { return this.chess.isDraw(); }
+  get history() { return this.chess.history({ verbose: true }); }
+
+  load(fen) { this.chess.load(fen); }
+  reset() { this.chess.reset(); }
+
+  /** All legal destination squares (with capture flag) for a piece on `square`. */
+  movesFrom(square) {
+    return this.chess.moves({ square, verbose: true }).map((m) => ({
+      to: m.to,
+      isCapture: m.flags.includes('c') || m.flags.includes('e'),
+      isPromotion: /=/.test(m.san),
+      san: m.san,
+    }));
   }
 
-  reset() {
-    this.game.reset();
-    this.history = [];
-    this.render();
-    this.onUpdate(this.getState());
-  }
+  pieceAt(square) { return this.chess.get(square); }
 
-  loadFen(fen) {
-    this.game.load(fen);
-    this.history = [];
-    this.render();
-    this.onUpdate(this.getState());
-  }
+  board() { return this.chess.board(); } // 8x8 array, rank 8 -> rank 1
 
-  loadPgn(pgn) {
-    this.game.load_pgn(pgn);
-    this.history = this.game.history({ verbose: true });
-    this.render();
-    this.onUpdate(this.getState());
-  }
-
-  move(from, to, promotion = 'q') {
-    const move = this.game.move({ from, to, promotion });
-    if (move) {
-      this.history.push(move);
-      this.render();
-      this.onUpdate(this.getState());
-      if (this.game.game_over()) {
-        this.onGameOver(this.getResult());
-      }
-      return move;
+  move({ from, to, promotion }) {
+    try {
+      const m = this.chess.move({ from, to, promotion: promotion || 'q' });
+      return m || null;
+    } catch {
+      return null;
     }
-    return null;
   }
 
-  undo() {
-    const m = this.game.undo();
-    if (m) {
-      this.history.pop();
-      this.render();
-      this.onUpdate(this.getState());
-    }
-    return m;
-  }
-
-  getState() {
-    return {
-      fen: this.game.fen(),
-      turn: this.game.turn(),
-      history: this.game.history(),
-      verbose: this.game.history({ verbose: true }),
-      inCheck: this.game.in_check(),
-      isCheckmate: this.game.in_checkmate(),
-      isDraw: this.game.in_draw(),
-      isStalemate: this.game.in_stalemate(),
-      isGameOver: this.game.game_over(),
-      legalMoves: this.game.moves({ verbose: true })
-    };
-  }
-
-  getResult() {
-    if (this.game.in_checkmate()) {
-      return this.game.turn() === 'w' ? '0-1' : '1-0';
-    }
-    if (this.game.in_draw() || this.game.in_stalemate()) return '1/2-1/2';
+  result() {
+    if (this.chess.isCheckmate()) return this.chess.turn() === 'w' ? '0-1' : '1-0';
+    if (this.chess.isDraw() || this.chess.isStalemate()) return '1/2-1/2';
     return '*';
   }
 
-  // Simple text board render if no chessboard.js
-  render() {
-    if (!this.boardEl) return;
-    // If chessboard.js is present, user should init separately
-    // Fallback ASCII-style for demo
-    if (!window.Chessboard && this.boardEl.dataset.mode !== 'canvas') {
-      const fen = this.game.fen().split(' ')[0];
-      const rows = fen.split('/');
-      let html = '<div class="simple-board" style="display:grid;grid-template-columns:repeat(8,1fr);aspect-ratio:1;border:2px solid #2a2f3a;border-radius:8px;overflow:hidden;font-size:clamp(16px,4vw,28px);text-align:center;">';
-      const pieces = {
-        K: '♔', Q: '♕', R: '♖', B: '♗', N: '♘', P: '♙',
-        k: '♚', q: '♛', r: '♜', b: '♝', n: '♞', p: '♟'
-      };
-      let rank = 8;
-      for (const row of rows) {
-        let file = 0;
-        for (const ch of row) {
-          if (/\d/.test(ch)) {
-            for (let i = 0; i < parseInt(ch, 10); i++) {
-              const light = (rank + file) % 2 === 0;
-              html += `<div style="background:${light ? '#eee' : '#769656'};display:flex;align-items:center;justify-content:center;aspect-ratio:1;"></div>`;
-              file++;
-            }
-          } else {
-            const light = (rank + file) % 2 === 0;
-            html += `<div style="background:${light ? '#eee' : '#769656'};display:flex;align-items:center;justify-content:center;aspect-ratio:1;">${pieces[ch] || ''}</div>`;
-            file++;
-          }
-        }
-        rank--;
-      }
-      html += '</div>';
-      this.boardEl.innerHTML = html;
-    }
+  /** Does a pending move from->to need a promotion prompt? */
+  needsPromotion(from, to) {
+    const piece = this.chess.get(from);
+    if (!piece || piece.type !== 'p') return false;
+    const targetRank = to[1];
+    return (piece.color === 'w' && targetRank === '8') || (piece.color === 'b' && targetRank === '1');
   }
 
-  fen() { return this.game.fen(); }
-  turn() { return this.game.turn(); }
-  moves(opts) { return this.game.moves(opts); }
-  pgn() { return this.game.pgn(); }
+  squareOfKing(color) {
+    const board = this.chess.board();
+    for (let r = 0; r < 8; r++) {
+      for (let f = 0; f < 8; f++) {
+        const p = board[r][f];
+        if (p && p.type === 'k' && p.color === color) return p.square;
+      }
+    }
+    return null;
+  }
 }
 
-if (typeof window !== 'undefined') {
-  window.GameController = GameController;
-  window.loadChessJS = loadChessJS;
-}
+export { Chess };

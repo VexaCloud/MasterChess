@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in — MasterChess</title>
+<link rel="icon" href="public/favicon.svg">
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<div class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="mark"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L9 7h6l-3-5zM8 8v3h2v2H8v2h2v2H6v-2H4v-2h2V11H4V8h4zm8 0v3h2v2h-2v2h2v2h-4v-2h-2v-2h2V11h-2V8h4z"/></svg></div>
+      <span>MasterChess</span>
+    </div>
+
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tab-signin">Sign in</div>
+      <div class="auth-tab" id="tab-signup">Create account</div>
+    </div>
+
+    <div id="alert-box"></div>
+
+    <form id="auth-form">
+      <div class="form-group" id="username-group" style="display:none;">
+        <label for="username">Username</label>
+        <input type="text" id="username" autocomplete="username" placeholder="knight_rider">
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" autocomplete="email" required placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" autocomplete="current-password" required placeholder="••••••••" minlength="6">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" id="submit-btn">Sign in</button>
+    </form>
+
+    <p class="text-sm text-faint" style="text-align:center;margin-top:1.2rem;margin-bottom:0;">
+      A private board for people who take their chess seriously.
+    </p>
+  </div>
+</div>
+
+<script type="module">
+import { supabase } from './js/supabase-client.js';
+
+const tabSignin = document.getElementById('tab-signin');
+const tabSignup = document.getElementById('tab-signup');
+const usernameGroup = document.getElementById('username-group');
+const submitBtn = document.getElementById('submit-btn');
+const form = document.getElementById('auth-form');
+const alertBox = document.getElementById('alert-box');
+let mode = 'signin';
+
+// Already signed in? Skip straight past the gate.
+supabase.auth.getSession().then(({ data }) => {
+  if (data.session) redirectAfterAuth();
+});
+
+function setMode(next) {
+  mode = next;
+  tabSignin.classList.toggle('active', mode === 'signin');
+  tabSignup.classList.toggle('active', mode === 'signup');
+  usernameGroup.style.display = mode === 'signup' ? 'block' : 'none';
+  submitBtn.textContent = mode === 'signup' ? 'Create account' : 'Sign in';
+  document.getElementById('password').autocomplete = mode === 'signup' ? 'new-password' : 'current-password';
+  alertBox.innerHTML = '';
+}
+tabSignin.onclick = () => setMode('signin');
+tabSignup.onclick = () => setMode('signup');
+
+function showAlert(message, kind = 'danger') {
+  alertBox.innerHTML = `<div class="alert alert-${kind} mb-2">${message}</div>`;
+}
+
+function redirectAfterAuth() {
+  const params = new URLSearchParams(location.search);
+  const next = params.get('next');
+  location.replace(next ? decodeURIComponent(next) : 'index.html');
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const username = document.getElementById('username').value.trim();
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = mode === 'signup' ? 'Creating account…' : 'Signing in…';
+  alertBox.innerHTML = '';
+
+  try {
+    if (mode === 'signup') {
+      if (!username) throw new Error('Choose a username.');
+      if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) throw new Error('Username must be 3-20 letters, numbers or underscores.');
+      const { error } = await supabase.auth.signUp({
+        email, password,
+        options: { data: { username, display_name: username } },
+      });
+      if (error) throw error;
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (sessionData.session) {
+        redirectAfterAuth();
+      } else {
+        showAlert('Account created — check your email to confirm, then sign in.', 'success');
+        setMode('signin');
+      }
+    } else {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      redirectAfterAuth();
+    }
+  } catch (err) {
+    showAlert(err.message || 'Something went wrong.');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = mode === 'signup' ? 'Create account' : 'Sign in';
+  }
+});
+</script>
+</body>
+</html>

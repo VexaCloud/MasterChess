@@ -1,10 +1,9 @@
 /**
  * MasterChess Bot Personalities
  * Unique styles, strengths (Stockfish skill/depth), and comment banks.
- * All free — no locks.
  */
 
-const BOTS = [
+export const BOTS = [
   {
     id: "rook_rookie",
     name: "Rook Rookie",
@@ -581,21 +580,16 @@ const BOTS = [
 ];
 
 // Helper to get a random comment
-function getBotComment(bot, event) {
+export function getBotComment(bot, event) {
   if (!bot || !bot.comments) return null;
   const pool = bot.comments[event] || bot.comments.good || ["..."];
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-function getBotById(id) {
+export function getBotById(id) {
   return BOTS.find(b => b.id === id) || BOTS[0];
 }
 
-function getBotsByEloRange(min, max) {
+export function getBotsByEloRange(min, max) {
   return BOTS.filter(b => b.elo >= min && b.elo <= max);
-}
-
-// Export for browser
-if (typeof window !== 'undefined') {
-  window.MasterChessBots = { BOTS, getBotComment, getBotById, getBotsByEloRange };
 }
