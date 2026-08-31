@@ -5,8 +5,8 @@
 // supabase/migrations/), but it must match YOUR project below or
 // nothing in this app will be able to reach your database.
 export const CONFIG = {
-  supabaseUrl: 'REPLACE_WITH_YOUR_SUPABASE_PROJECT_URL', // e.g. https://xxxxxxxx.supabase.co
-  supabaseAnonKey: 'REPLACE_WITH_YOUR_SUPABASE_ANON_KEY',
+  supabaseUrl: 'https://ikbblffrtgemyktrkgae.supabase.co', // e.g. https://xxxxxxxx.supabase.co
+  supabaseAnonKey: 'sb_publishable_mOT9PUzKPUYHGY2oKdAS9g_-ZS1yiCh',
   timeControls: {
     bullet: [
       { label: '1+0', base: 60, increment: 0 },
@@ -26,3 +26,13 @@ export const CONFIG = {
     ],
   },
 };
+
+/** True when the placeholders above have not been replaced. */
+export function isConfigMissing() {
+  return (
+    !CONFIG.supabaseUrl ||
+    CONFIG.supabaseUrl.includes('REPLACE_WITH') ||
+    !CONFIG.supabaseAnonKey ||
+    CONFIG.supabaseAnonKey.includes('REPLACE_WITH')
+  );
+}
