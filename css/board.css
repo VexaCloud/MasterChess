@@ -4,26 +4,27 @@
 
 .board-scene {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 1.25rem;
+  grid-template-columns: minmax(280px, 1fr) minmax(240px, 320px);
+  gap: 1.5rem;
   align-items: start;
+  width: 100%;
 }
-@media (max-width: 980px) {
+@media (max-width: 900px) {
   .board-scene { grid-template-columns: 1fr; }
 }
 
-.board-column { display: flex; flex-direction: column; align-items: center; gap: 0.65rem; }
+.board-column { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; width: 100%; }
 
 .board-frame {
   width: 100%;
-  max-width: 640px;
-  background: #312e2b;
-  border-radius: 4px;
-  padding: 12px;
-  box-shadow: var(--shadow-pop);
+  max-width: min(720px, 100%);
+  background: #2a2825;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 8px 32px -6px rgba(0,0,0,0.5);
 }
 
-.board-square-wrap { position: relative; width: 100%; aspect-ratio: 1; }
+.board-square-wrap { position: relative; width: 100%; aspect-ratio: 1; min-height: 280px; }
 
 .board {
   display: grid;

@@ -1,6 +1,3 @@
-// Wraps the vendored Stockfish 18 WASM worker (js/stockfish/stockfish-18-lite-single.js)
-// with a small promise-based UCI interface: best move for bot play, and
-// multi-PV evaluation for puzzle generation / hints / eval bars.
 export class StockfishEngine {
   constructor(options = {}) {
     this.worker = null;

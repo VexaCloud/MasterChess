@@ -1,7 +1,3 @@
-// Renders a GameController (js/chess-core.js) as an interactive board:
-// click a piece to see legal destinations as dots (chess.com-style),
-// click a destination to move, or drag-and-drop. Promotion is handled
-// with an in-board picker instead of prompt()/alert().
 const FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const RANKS = ['1', '2', '3', '4', '5', '6', '7', '8'];
 

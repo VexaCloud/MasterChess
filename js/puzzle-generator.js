@@ -1,17 +1,3 @@
-// Generates a fresh tactics puzzle using the local Stockfish engine.
-// Used by puzzles.html whenever get-puzzle reports the bank has nothing
-// unseen left near the player's rating (see supabase/functions/get-puzzle).
-//
-// How it works:
-//  1. Walk forward from the start position with semi-random, shallow-Stockfish
-//     -weighted moves (not pure random — pieces aren't hung for no reason,
-//     but the game isn't "real" either) to reach a varied middlegame position.
-//  2. At each resulting position, ask Stockfish for the top 2 lines at real
-//     depth. If the best move clearly outclasses the second-best (a big
-//     centipawn swing, or a forced mate where the alternative isn't mate),
-//     that position is a genuine tactic: save the position *before* that
-//     move as the puzzle, and the engine's principal variation as the
-//     solution the player has to find.
 import { GameController } from './chess-core.js';
 
 const SWING_THRESHOLD_CP = 250;
@@ -26,7 +12,6 @@ async function weightedRandomMove(engine, controller) {
   const legalCount = controller.chess.moves().length;
   if (legalCount === 0) return null;
   if (Math.random() < 0.35) {
-    // Occasionally just play a random legal move for opening variety.
     const moves = controller.chess.moves();
     return moves[Math.floor(Math.random() * moves.length)];
   }
@@ -35,7 +20,6 @@ async function weightedRandomMove(engine, controller) {
     const moves = controller.chess.moves();
     return moves[Math.floor(Math.random() * moves.length)];
   }
-  // Weighted pick favouring the better lines, but not always the very best.
   const weights = lines.map((_, i) => 1 / (i + 1));
   const total = weights.reduce((a, b) => a + b, 0);
   let r = Math.random() * total;
@@ -85,20 +69,14 @@ export async function generatePuzzle(engine, opts = {}) {
     const secondVal = second ? scoreValue(second) : -Infinity;
     const swing = bestVal - secondVal;
 
-    // Require a real tactic: either a forced mate the alternative doesn't
-    // give, or a large, decisive centipawn swing between best and 2nd best.
     const isMateWin = best.type === 'mate' && best.value > 0 && !(second?.type === 'mate' && second.value > 0);
     if (!isMateWin && swing < SWING_THRESHOLD_CP) continue;
-    // Skip if the position was already a complete blowout before this move
-    // (both lines already winning huge) — not an interesting puzzle.
     if (!isMateWin && secondVal > 700) continue;
 
     const pv = best.pv;
     const solutionLen = Math.min(pv.length, best.type === 'mate' ? Math.abs(best.value) * 2 - 1 : 3);
     const solutionUci = pv.slice(0, Math.max(1, solutionLen));
 
-    // Verify the whole solution replays legally (defensive — PV should
-    // always be legal, but the puzzle bank must never get bad data).
     const verifyController = new GameController(fenBefore);
     let valid = true;
     for (const uci of solutionUci) {

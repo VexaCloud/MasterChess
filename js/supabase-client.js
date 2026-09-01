@@ -1,6 +1,3 @@
-// Central Supabase client + the auth gate every protected page uses.
-// Import { requireSession } from this module at the top of any page
-// that should not render without a logged-in user.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { CONFIG, isConfigMissing } from './config.js';
 
@@ -31,7 +28,6 @@ function showConfigError() {
 }
 
 if (isConfigMissing()) {
-  // Delay slightly so the page has a chance to paint, then replace content.
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', showConfigError);
   } else {

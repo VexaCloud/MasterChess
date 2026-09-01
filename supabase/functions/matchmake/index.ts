@@ -43,16 +43,19 @@ Deno.serve(async (req: Request) => {
     return json({ matched: true, game_id: existingGame.id });
   }
 
-  // Look for a compatible opponent already in the queue (same time control, not us).
+  const expand = !!body.expand;
+  const eloWindow = expand ? 800 : 300;
+
   const { data: candidates } = await admin
     .from("matchmaking_queue")
     .select("*")
     .eq("time_control", timeControl)
     .neq("user_id", user.id)
     .order("created_at", { ascending: true })
-    .limit(5);
+    .limit(12);
 
-  const opponent = (candidates || []).find((c) => Math.abs(c.rating - rating) <= 400) || candidates?.[0];
+  const sorted = (candidates || []).slice().sort((a, b) => Math.abs(a.rating - rating) - Math.abs(b.rating - rating));
+  const opponent = sorted.find((c) => Math.abs(c.rating - rating) <= eloWindow) || (expand ? sorted[0] : null);
 
   if (opponent) {
     // Claim the opponent atomically by deleting their queue row first;

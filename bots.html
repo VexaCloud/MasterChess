@@ -33,12 +33,12 @@ mountShell({ active: 'bots.html', profile: myProfile });
 
 document.getElementById('bots-feed').innerHTML = BOTS.map((b) => `
   <a class="choice-card" href="play.html?mode=bot&bot=${encodeURIComponent(b.id)}">
-    <div class="icon-wrap"><svg class="icon"><use href="assets/icons.svg#icon-bot"/></svg></div>
+    <div class="avatar" style="width:44px;height:44px;font-size:.85rem;background:${b.color};flex-shrink:0;">${escapeHtml(b.avatar)}</div>
     <div class="body">
       <div class="title">${escapeHtml(b.name)}</div>
-      <div class="sub">${escapeHtml(b.style || b.description || '')}</div>
+      <div class="sub">${escapeHtml(b.style)} · unique personality & comments</div>
     </div>
-    <div class="trail">${b.elo} elo</div>
+    <div class="trail">${b.elo}</div>
   </a>
 `).join('');
 

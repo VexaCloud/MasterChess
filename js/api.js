@@ -1,7 +1,3 @@
-// Calls a Supabase Edge Function with the caller's access token attached.
-// Every edge function in supabase/functions/ requires this header and
-// verifies it server-side (see supabase/functions/_shared/auth.ts) —
-// there is no way to call them anonymously.
 import { CONFIG } from './config.js';
 import { getAccessToken } from './supabase-client.js';
 

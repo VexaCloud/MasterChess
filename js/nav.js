@@ -1,6 +1,3 @@
-// Shared app shell: sidebar nav (desktop) + topbar (mobile), plus the
-// user chip / sign-out control. Every protected page calls mountShell()
-// after requireSession() resolves so the nav can show the real profile.
 import { signOut, initials } from './supabase-client.js';
 
 const NAV_ITEMS = [

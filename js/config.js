@@ -1,9 +1,3 @@
-// MasterChess config — set your Supabase project credentials here.
-// Find these in your Supabase dashboard: Project Settings -> API.
-// The anon/publishable key is meant to be public client-side (it's
-// constrained entirely by the Row Level Security policies in
-// supabase/migrations/), but it must match YOUR project below or
-// nothing in this app will be able to reach your database.
 export const CONFIG = {
   supabaseUrl: 'https://ikbblffrtgemyktrkgae.supabase.co', // e.g. https://xxxxxxxx.supabase.co
   supabaseAnonKey: 'sb_publishable_mOT9PUzKPUYHGY2oKdAS9g_-ZS1yiCh',

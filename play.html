@@ -187,12 +187,12 @@ function buildBotFeed() {
   const wrap = document.getElementById('bot-feed');
   wrap.innerHTML = BOTS.map((b, i) => `
     <button class="choice-card ${i === 0 ? 'selected' : ''}" data-bot="${b.id}">
-      <div class="icon-wrap"><svg class="icon"><use href="assets/icons.svg#icon-bot"/></svg></div>
+      <div class="avatar" style="width:40px;height:40px;font-size:.8rem;background:${b.color};flex-shrink:0;">${b.avatar}</div>
       <div class="body">
         <div class="title">${b.name}</div>
-        <div class="sub">${b.style || b.description || ''}</div>
+        <div class="sub">${b.style} · ${b.elo} Elo</div>
       </div>
-      <div class="trail">${b.elo}</div>
+      <div class="trail text-faint text-xs">${b.style}</div>
     </button>
   `).join('');
   wrap.querySelectorAll('.choice-card').forEach((card) => {
@@ -260,15 +260,27 @@ async function startOnlineMatch(timeControl) {
   document.getElementById('draw-btn').style.display = 'inline-flex';
   document.getElementById('mm-overlay').style.display = 'flex';
   document.getElementById('board').innerHTML = '';
+  document.getElementById('mm-status').textContent = 'Searching near your rating…';
 
   let tries = 0;
+  const maxTries = 24;
   const poll = async () => {
     tries++;
-    document.getElementById('mm-status').textContent = tries < 3 ? 'Searching' : `Searching… (${tries * 2}s)`;
+    if (tries > maxTries) {
+      clearInterval(queuePoll);
+      queuePoll = null;
+      document.getElementById('mm-status').innerHTML = 'No one is matchmaking right now.<br><span class="text-muted text-sm">Try a different time control or come back later.</span>';
+      return;
+    }
+    const secs = tries * 2;
+    if (tries <= 4) document.getElementById('mm-status').textContent = 'Searching near your rating…';
+    else if (tries <= 10) document.getElementById('mm-status').textContent = `Expanding search… (${secs}s)`;
+    else document.getElementById('mm-status').textContent = `Still looking… (${secs}s)`;
     try {
-      const res = await callFunction('matchmake', { action: 'join', time_control: timeControl });
+      const res = await callFunction('matchmake', { action: 'join', time_control: timeControl, expand: tries > 4 });
       if (res.matched) {
-        clearInterval(queuePoll); queuePoll = null;
+        clearInterval(queuePoll);
+        queuePoll = null;
         await loadOnlineGame(res.game_id);
       }
     } catch (err) {
@@ -276,7 +288,7 @@ async function startOnlineMatch(timeControl) {
     }
   };
   await poll();
-  if (!currentGameId) queuePoll = setInterval(poll, 2500);
+  if (!currentGameId) queuePoll = setInterval(poll, 2000);
 
   document.getElementById('cancel-match-btn').onclick = async () => {
     if (queuePoll) { clearInterval(queuePoll); queuePoll = null; }

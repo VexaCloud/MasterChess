@@ -1,6 +1,3 @@
-// Thin wrapper around chess.js (vendored locally at js/vendor/chess.esm.js)
-// giving the board UI exactly what it needs for click-to-move: legal
-// destinations per square, move application, and game-state queries.
 import { Chess } from './vendor/chess.esm.js';
 
 export class GameController {
