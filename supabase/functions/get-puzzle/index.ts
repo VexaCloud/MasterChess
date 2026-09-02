@@ -1,10 +1,35 @@
-// Authenticated: fetch the next puzzle for the caller.
-//   mode "regular": next puzzle near the user's puzzle rating that they
-//     haven't solved yet, drawn from the whole bank (curated + community +
-//     previously Stockfish-generated). If nothing unseen is left near their
-//     rating, tells the client to generate a fresh one locally with Stockfish.
-//   mode "browse": paged/filterable browsing, most recent first, ignores solve history.
-import { requireUser, json, corsHeaders } from "../_shared/auth.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+
+async function requireUser(req: Request) {
+  const authHeader = req.headers.get("Authorization") ?? "";
+  const token = authHeader.replace(/^Bearer\s+/i, "");
+  if (!token) return { error: json({ error: "Missing Authorization header" }, 401) };
+
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+  const authClient = createClient(supabaseUrl, anonKey, {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+  });
+  const { data, error } = await authClient.auth.getUser(token);
+  if (error || !data?.user) return { error: json({ error: "Invalid or expired session" }, 401) };
+
+  return { user: data.user, admin: createClient(supabaseUrl, serviceKey) };
+}
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -24,7 +49,6 @@ Deno.serve(async (req: Request) => {
     return json({ puzzles: data });
   }
 
-  // "regular" mode
   const { data: profile } = await admin.from("profiles").select("ratings").eq("id", user.id).single();
   const targetRating = profile?.ratings?.puzzle ?? 1000;
 
