@@ -1,8 +1,3 @@
-// Shared helper: every edge function must call this first.
-// It verifies the caller's Supabase JWT and returns an admin client
-// (service role) plus the authenticated user. No function trusts a
-// user_id/white_id/etc. passed in the request body — the identity
-// always comes from the verified token.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 export const corsHeaders = {
@@ -29,7 +24,6 @@ export async function requireUser(req: Request) {
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-  // Verify the JWT belongs to a real, current user.
   const authClient = createClient(supabaseUrl, anonKey, {
     global: { headers: { Authorization: `Bearer ${token}` } },
   });
@@ -38,7 +32,6 @@ export async function requireUser(req: Request) {
     return { error: json({ error: "Invalid or expired session" }, 401) };
   }
 
-  // Admin client for the actual DB work, now that identity is confirmed.
   const admin = createClient(supabaseUrl, serviceKey);
   return { user: data.user, admin };
 }
