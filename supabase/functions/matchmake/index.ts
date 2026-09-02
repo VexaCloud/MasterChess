@@ -1,9 +1,35 @@
-// Authenticated matchmaking for "Play Online" (the default mode).
-// The client calls this on an interval after joining. It:
-//   1. Looks for someone else already waiting with a compatible time control.
-//   2. If found: creates the game, removes both from the queue, returns the game.
-//   3. If not: upserts the caller into the queue and returns { waiting: true }.
-import { requireUser, json, corsHeaders } from "../_shared/auth.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+
+async function requireUser(req: Request) {
+  const authHeader = req.headers.get("Authorization") ?? "";
+  const token = authHeader.replace(/^Bearer\s+/i, "");
+  if (!token) return { error: json({ error: "Missing Authorization header" }, 401) };
+
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+  const authClient = createClient(supabaseUrl, anonKey, {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+  });
+  const { data, error } = await authClient.auth.getUser(token);
+  if (error || !data?.user) return { error: json({ error: "Invalid or expired session" }, 401) };
+
+  return { user: data.user, admin: createClient(supabaseUrl, serviceKey) };
+}
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -29,7 +55,6 @@ Deno.serve(async (req: Request) => {
   const bucket = base <= 179 ? "bullet" : base <= 480 ? "blitz" : "rapid";
   const rating = profile?.ratings?.[bucket] ?? 1200;
 
-  // Is there already a game waiting for us (another client matched us first)?
   const { data: existingGame } = await admin
     .from("games")
     .select("id, white_id, black_id, status")
@@ -54,38 +79,43 @@ Deno.serve(async (req: Request) => {
     .order("created_at", { ascending: true })
     .limit(12);
 
-  const sorted = (candidates || []).slice().sort((a, b) => Math.abs(a.rating - rating) - Math.abs(b.rating - rating));
-  const opponent = sorted.find((c) => Math.abs(c.rating - rating) <= eloWindow) || (expand ? sorted[0] : null);
+  const sorted = (candidates || []).slice().sort(
+    (a, b) => Math.abs(a.rating - rating) - Math.abs(b.rating - rating)
+  );
+  const opponent =
+    sorted.find((c) => Math.abs(c.rating - rating) <= eloWindow) ||
+    (expand ? sorted[0] : null);
 
   if (opponent) {
-    // Claim the opponent atomically by deleting their queue row first;
-    // if that fails/returns nothing, someone else grabbed them.
     const { data: deleted } = await admin
       .from("matchmaking_queue")
       .delete()
       .eq("user_id", opponent.user_id)
       .select();
-    if (!deleted || deleted.length === 0) {
-      // Race lost — fall through to (re)join the queue ourselves.
-    } else {
+    if (deleted && deleted.length > 0) {
       await admin.from("matchmaking_queue").delete().eq("user_id", user.id);
       const whiteFirst = Math.random() < 0.5;
       const white_id = whiteFirst ? user.id : opponent.user_id;
       const black_id = whiteFirst ? opponent.user_id : user.id;
-      const { data: newGame, error } = await admin.from("games").insert({
-        white_id, black_id,
-        rated: true,
-        time_control: timeControl,
-        increment,
-        variant: "standard",
-        status: "ongoing",
-        fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-        turn: "w",
-        white_clock: base,
-        black_clock: base,
-        moves: [],
-        last_move_at: new Date().toISOString(),
-      }).select().single();
+      const { data: newGame, error } = await admin
+        .from("games")
+        .insert({
+          white_id,
+          black_id,
+          rated: true,
+          time_control: timeControl,
+          increment,
+          variant: "standard",
+          status: "ongoing",
+          fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+          turn: "w",
+          white_clock: base,
+          black_clock: base,
+          moves: [],
+          last_move_at: new Date().toISOString(),
+        })
+        .select()
+        .single();
       if (error) return json({ error: error.message }, 400);
       return json({ matched: true, game_id: newGame.id });
     }
@@ -94,7 +124,9 @@ Deno.serve(async (req: Request) => {
   await admin.from("matchmaking_queue").upsert({
     user_id: user.id,
     time_control: timeControl,
-    base, increment, rating,
+    base,
+    increment,
+    rating,
     created_at: new Date().toISOString(),
   });
 
